@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FinanceCo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to match Home Credit's aesthetic */
+        .primary-red { background-color: #e30613; }
+        .hover\:primary-red:hover { background-color: #c70511; }
+        .font-sans { font-family: 'Arial', sans-serif; }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-primary-red">FinanceCo</div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-primary-red">Home</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">Products</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">Support</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">About</a>
+                <a href="login.html" class="text-gray-700 hover:text-primary-red">Login</a>
+            </nav>
+            <button class="md:hidden text-gray-700" id="menu-toggle">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+            <nav class="flex flex-col space-y-4 p-4">
+                <a href="index.html" class="text-gray-700 hover:text-primary-red">Home</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">Products</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">Support</a>
+                <a href="#" class="text-gray-700 hover:text-primary-red">About</a>
+                <a href="login.html" class="text-gray-700 hover:text-primary-red">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Section -->
+    <section class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Login to Your Account</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your email">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your password">
+                    </div>
+                    <div class="text-right">
+                        <a href="#" class="text-sm text-primary-red hover:underline">Forgot Password?</a>
+                    </div>
+                    <button class="w-full bg-primary-red text-white font-semibold px-4 py-2 rounded-md hover:primary-red">Login</button>
+                </div>
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    Don't have an account? <a href="#" class="text-primary-red hover:underline">Sign Up</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">About Us</h3>
+                    <p class="text-gray-400">We provide innovative financial solutions to help you achieve your goals.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <p class="text-gray-400">Email: support@financeco.com</p>
+                    <p class="text-gray-400">Phone: +123-456-7890</p>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-400">
+                <p>© 2025 FinanceCo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
