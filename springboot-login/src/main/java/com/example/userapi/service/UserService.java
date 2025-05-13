@@ -1,118 +1,109 @@
 package com.example.userapi.service;
 
-import com.example.userapi.dto.LoginRequest;
-import com.example.userapi.dto.RegisterRequest;
 import com.example.userapi.dto.UserDTO;
 import com.example.userapi.model.User;
 import com.example.userapi.repository.UserRepository;
-import org.springframework.context.annotation.Lazy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository,
-                       @Lazy PasswordEncoder passwordEncoder,
-                       @Lazy AuthenticationManager authenticationManager,
-                       JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-    }
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-
-        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toList());
-
+                .orElseThrow(() -> {
+                    logger.error("User not found with username: {}", username);
+                    return new UsernameNotFoundException("User not found with username: " + username);
+                });
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                authorities);
-    }
-
-    public String register(RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new RuntimeException("Username is already taken");
-        }
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("Email is already in use");
-        }
-
-        User user = new User(
-                registerRequest.getUsername(),
-                registerRequest.getEmail(),
-                passwordEncoder.encode(registerRequest.getPassword())
+                new ArrayList<>()
         );
-        user.setRoles(Arrays.asList("USER")); // Gán vai trò mặc định
-        userRepository.save(user);
-        return "User registered successfully";
-    }
-
-    public String login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User user = userRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + loginRequest.getUsername()));
-        user.setLastLogin(LocalDateTime.now());
-        userRepository.save(user);
-
-        return jwtService.generateToken(authentication); // Sử dụng phương thức mới
     }
 
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-        return convertToDTO(user);
-    }
-
-    public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        return convertToDTO(user);
-    }
-
-    private UserDTO convertToDTO(User user) {
+                .orElseThrow(() -> {
+                    logger.error("User not found with username: {}", username);
+                    return new RuntimeException("User not found with username: " + username);
+                });
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getPassword(),
+                user.getRoles(),
                 user.getCreatedAt(),
-                user.getLastLogin()
+                user.getLastLogin(),
+                user.getAge(),
+                user.getSex(),
+                user.getIncome(),
+                user.getSegment(),
+                user.getAgeGrouped(),
+                user.getIncomeGrouped()
         );
     }
 
+    public String login(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    logger.error("User not found with username: {}", username);
+                    return new RuntimeException("User not found");
+                });
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            logger.error("Invalid password for user: {}", username);
+            throw new RuntimeException("Invalid password");
+        }
+        user.setLastLogin(LocalDateTime.now());
+        userRepository.save(user);
+        return "Login successful";
+    }
+
+    public String register(com.example.userapi.dto.RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            logger.error("Username already exists: {}", registerRequest.getUsername());
+            throw new RuntimeException("Username already exists");
+        }
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            logger.error("Email already exists: {}", registerRequest.getEmail());
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setAge(registerRequest.getAge());
+        user.setSex(registerRequest.getSex());
+        user.setIncome(registerRequest.getIncome());
+        user.setSegment(registerRequest.getSegment());
+        user.setAgeGrouped(registerRequest.getAgeGrouped());
+        user.setIncomeGrouped(registerRequest.getIncomeGrouped());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setRoles(Collections.singletonList("ROLE_USER"));
+
+        userRepository.save(user);
+        logger.info("User registered successfully: {}", registerRequest.getUsername());
+        return "User registered successfully";
+    }
 }

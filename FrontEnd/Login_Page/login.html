@@ -3,300 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - FinanceCo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles to match FinanceCo's aesthetic */
-        .primary-red { background-color: #e30613; }
-        .hover\:primary-red:hover { background-color: #c70511; }
-        .font-sans { font-family: 'Arial', sans-serif; }
-        .error { color: #e30613; }
-        .success { color: #10b981; }
-    </style>
+    <title>Bank Product Recommendation - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="font-sans bg-gray-100">
-<!-- Header -->
-<header class="fixed top-0 w-full bg-white shadow-md z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="text-2xl font-bold text-primary-red">FinanceCo</div>
-        <nav class="hidden md:flex space-x-6" id="nav-menu">
-            <a href="../Home_Page/index.html" class="text-gray-700 hover:text-primary-red">Home</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">Products</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">Support</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">About</a>
-            <a href="login.html" class="text-gray-700 hover:text-primary-red" id="login-link">Login</a>
-            <a href="../Dashboard_Page/dashboard.html" class="text-gray-700 hover:text-primary-red">Dashboard</a>
-        </nav>
-        <button class="md:hidden text-gray-700" id="menu-toggle">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-            </svg>
-        </button>
-    </div>
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
-        <nav class="flex flex-col space-y-4 p-4" id="mobile-nav-menu">
-            <a href="../Home_Page/index.html" class="text-gray-700 hover:text-primary-red">Home</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">Products</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">Support</a>
-            <a href="#" class="text-gray-700 hover:text-primary-red">About</a>
-            <a href="login.html" class="text-gray-700 hover:text-primary-red" id="mobile-login-link">Login</a>
-            <a href="../Dashboard_Page/dashboard.html" class="text-gray-700 hover:text-primary-red">Dashboard</a>
-        </nav>
-    </div>
-</header>
-
-<!-- Main Section -->
-<section class="pt-24 pb-12">
-    <div class="container mx-auto px-4">
-        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-            <!-- Toggle between Login and Register -->
-            <div class="flex justify-center mb-6">
-                <button id="show-login" class="px-4 py-2 text-primary-red font-semibold border-b-2 border-primary-red">Login</button>
-                <button id="show-register" class="px-4 py-2 text-gray-700 font-semibold">Register</button>
-            </div>
-
-            <!-- Login Form -->
-            <div id="login-form" class="space-y-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Login to Your Account</h2>
-                <div>
-                    <label for="login-username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="text" id="login-username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your username">
-                </div>
-                <div>
-                    <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="login-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your password">
-                </div>
-                <div class="text-right">
-                    <a href="#" class="text-sm text-primary-red hover:underline">Forgot Password?</a>
-                </div>
-                <button onclick="login()" class="w-full bg-primary-red text-white font-semibold px-4 py-2 rounded-md hover:primary-red">Login</button>
-                <p id="login-message" class="text-center text-sm mt-4"></p>
-            </div>
-
-            <!-- Register Form -->
-            <div id="register-form" class="space-y-4 hidden">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Create an Account</h2>
-                <div>
-                    <label for="register-username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="text" id="register-username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your username">
-                </div>
-                <div>
-                    <label for="register-password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="register-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-red focus:border-primary-red" placeholder="Enter your password">
-                </div>
-                <button onclick="register()" class="w-full bg-primary-red text-white font-semibold px-4 py-2 rounded-md hover:primary-red">Register</button>
-                <p id="register-message" class="text-center text-sm mt-4"></p>
-            </div>
-
-            <!-- User Info (shown after login) -->
-            <div id="user-info" class="space-y-4 hidden">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">User Information</h2>
-                <p id="user-details" class="text-gray-700"></p>
-                <button onclick="checkAuth()" class="w-full bg-gray-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-gray-700">Check Authentication</button>
-                <button onclick="logout()" class="w-full bg-primary-red text-white font-semibold px-4 py-2 rounded-md hover:primary-red">Logout</button>
-                <p id="auth-message" class="text-center text-sm mt-4"></p>
-            </div>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div id="error-message" class="hidden text-red-500 mb-4"></div>
+    <div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Username</label>
+            <input type="text" id="username" class="w-full px-3 py-2 border rounded-lg">
         </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-gray-800 text-white py-8">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h3 class="text-lg font-semibold mb-4">About Us</h3>
-                <p class="text-gray-400">We provide innovative financial solutions to help you achieve your goals.</p>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white">Terms & Conditions</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Contact</h3>
-                <p class="text-gray-400">Email: support@financeco.com</p>
-                <p class="text-gray-400">Phone: +123-456-7890</p>
-            </div>
+        <div class="mb-6">
+            <label class="block text-gray-700">Password</label>
+            <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg">
         </div>
-        <div class="mt-8 text-center text-gray-400">
-            <p>© 2025 FinanceCo. All rights reserved.</p>
-        </div>
+        <button onclick="login()" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Login</button>
     </div>
-</footer>
+    <p class="mt-4 text-center">
+        Don't have an account? <a href="register.html" class="text-blue-500 hover:underline">Register</a>
+    </p>
+</div>
 
-<!-- JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    const API_URL = 'http://localhost:8080/api';
-    let token = localStorage.getItem('token') || '';
-    let currentUsername = localStorage.getItem('username') || '';
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
 
-    // Set Axios default headers for authenticated requests
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        updateNavForLoggedIn();
-        showUserInfo();
-    }
-
-    // Mobile Menu Toggle
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-
-    // Toggle Login/Register Forms
-    const showLogin = document.getElementById('show-login');
-    const showRegister = document.getElementById('show-register');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    showLogin.addEventListener('click', () => {
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        showLogin.classList.add('border-b-2', 'border-primary-red', 'text-primary-red');
-        showRegister.classList.remove('border-b-2', 'border-primary-red', 'text-primary-red');
-        showRegister.classList.add('text-gray-700');
-    });
-    showRegister.addEventListener('click', () => {
-        registerForm.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-        showRegister.classList.add('border-b-2', 'border-primary-red', 'text-primary-red');
-        showLogin.classList.remove('border-b-2', 'border-primary-red', 'text-primary-red');
-        showLogin.classList.add('text-gray-700');
-    });
-
-    // Register
-    async function register() {
-        const username = document.getElementById('register-username').value;
-        const password = document.getElementById('register-password').value;
-        const messageEl = document.getElementById('register-message');
-
-        if (!username || !password) {
-            messageEl.textContent = 'Please fill in all fields';
-            messageEl.className = 'error';
-            return;
-        }
-
-        try {
-            const response = await axios.post(`${API_URL}/auth/register`, { username, password });
-            messageEl.textContent = response.data;
-            messageEl.className = 'success';
-            setTimeout(() => {
-                showLogin.click();
-                messageEl.textContent = '';
-            }, 2000);
-        } catch (error) {
-            messageEl.textContent = error.response?.data || 'Registration failed';
-            messageEl.className = 'error';
-        }
-    }
-
-    // Login
-async function login() {
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-    const messageEl = document.getElementById('login-message');
-
-    if (!username || !password) {
-        messageEl.textContent = 'Please fill in all fields';
-        messageEl.className = 'error';
-        return;
-    }
-
-    try {
-        const response = await axios.post(`${API_URL}/auth/login`, { username, password });
-        token = response.data.token;
-        currentUsername = response.data.username;
-        localStorage.setItem('token', token);
-        localStorage.setItem('username', currentUsername);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        messageEl.textContent = `Login successful! Redirecting...`;
-        messageEl.className = 'success';
-        setTimeout(() => {
-            window.location.href = '../Home_Page/index.html';
-        }, 1000);
-    } catch (error) {
-        messageEl.textContent = error.response?.data || 'Login failed';
-        messageEl.className = 'error';
-    }
-}
-
-    // Fetch User Info
-    async function showUserInfo() {
-        if (!token || !currentUsername) return;
-        const userInfo = document.getElementById('user-info');
-        const userDetails = document.getElementById('user-details');
-        loginForm.classList.add('hidden');
-        registerForm.classList.add('hidden');
-        userInfo.classList.remove('hidden');
-
-        try {
-            const response = await axios.get(`${API_URL}/user?username=${currentUsername}`);
-            const user = response.data;
-            userDetails.textContent = `Username: ${user.username}${user.email ? ', Email: ' + user.email : ''}`;
-            userDetails.className = 'success';
-        } catch (error) {
-            userDetails.textContent = error.response?.data || 'Failed to fetch user info';
-            userDetails.className = 'error';
-        }
-    }
-
-    // Check Authentication
-    async function checkAuth() {
-        const messageEl = document.getElementById('auth-message');
-        try {
-            const response = await axios.get(`${API_URL}/auth/check`);
-            messageEl.textContent = response.data;
-            messageEl.className = 'success';
-        } catch (error) {
-            messageEl.textContent = error.response?.data || 'Not authenticated';
-            messageEl.className = 'error';
-        }
-    }
-
-    // Logout
-    function logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        token = '';
-        currentUsername = '';
-        delete axios.defaults.headers.common['Authorization'];
-        updateNavForLoggedOut();
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        document.getElementById('user-info').classList.add('hidden');
-        document.getElementById('login-message').textContent = 'Logged out successfully';
-        document.getElementById('login-message').className = 'success';
-        showLogin.click();
-    }
-
-    // Update Navigation for Logged-In State
-    function updateNavForLoggedIn() {
-        const loginLink = document.getElementById('login-link');
-        const mobileLoginLink = document.getElementById('mobile-login-link');
-        loginLink.textContent = 'Logout';
-        loginLink.href = '#';
-        loginLink.onclick = logout;
-        mobileLoginLink.textContent = 'Logout';
-        mobileLoginLink.href = '#';
-        mobileLoginLink.onclick = logout;
-    }
-
-    // Update Navigation for Logged-Out State
-    function updateNavForLoggedOut() {
-        const loginLink = document.getElementById('login-link');
-        const mobileLoginLink = document.getElementById('mobile-login-link');
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.onclick = null;
-        mobileLoginLink.textContent = 'Login';
-        mobileLoginLink.href = 'login.html';
-        mobileLoginLink.onclick = null;
+        fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(username + ':' + password)
+            },
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                errorMessage.classList.add('hidden');
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('auth', btoa(username + ':' + password));
+                window.location.href = 'dashboard.html';
+            })
+            .catch(error => {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            });
     }
 </script>
 </body>

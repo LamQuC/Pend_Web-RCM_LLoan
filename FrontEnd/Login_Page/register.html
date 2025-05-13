@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Product Recommendation - Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div id="error-message" class="hidden text-red-500 mb-4"></div>
+    <div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Username</label>
+            <input type="text" id="username" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Email</label>
+            <input type="email" id="email" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Password</label>
+            <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Age</label>
+            <input type="number" id="age" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Sex</label>
+            <select id="sex" class="w-full px-3 py-2 border rounded-lg">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Income</label>
+            <input type="number" id="income" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Segment</label>
+            <select id="segment" class="w-full px-3 py-2 border rounded-lg">
+                <option value="VIP">VIP</option>
+                <option value="Individuals">Individuals</option>
+                <option value="Graduated">Graduated</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Age Group</label>
+            <select id="ageGrouped" class="w-full px-3 py-2 border rounded-lg">
+                <option value="young">Young</option>
+                <option value="adult">Adult</option>
+                <option value="senior">Senior</option>
+                <option value="elder">Elder</option>
+            </select>
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700">Income Group</label>
+            <select id="incomeGrouped" class="w-full px-3 py-2 border rounded-lg">
+                <option value="Low">Low</option>
+                <option value="Ordinary">Ordinary</option>
+                <option value="Median-high">Median-high</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <button onclick="register()" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Register</button>
+    </div>
+    <p class="mt-4 text-center">
+        Already have an account? <a href="login.html" class="text-blue-500 hover:underline">Login</a>
+    </p>
+</div>
+
+<script>
+    function register() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const age = document.getElementById('age').value;
+        const sex = document.getElementById('sex').value;
+        const income = document.getElementById('income').value;
+        const segment = document.getElementById('segment').value;
+        const ageGrouped = document.getElementById('ageGrouped').value;
+        const incomeGrouped = document.getElementById('incomeGrouped').value;
+        const errorMessage = document.getElementById('error-message');
+
+        fetch('http://localhost:8080/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password, age, sex, income, segment, ageGrouped, incomeGrouped })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Registration failed');
+                }
+                return response.text();
+            })
+            .then(data => {
+                errorMessage.classList.add('hidden');
+                alert('Registration successful! Please login.');
+                window.location.href = 'login.html';
+            })
+            .catch(error => {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            });
+    }
+</script>
+</body>
+</html>

@@ -1,44 +1,38 @@
 package com.example.userapi.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public class RegisterRequest {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
     private String email;
-
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 40, message = "Password must be between 6 and 40 characters")
     private String password;
+    private Integer age;
+    private String sex;
+    private Long income;
+    private String segment;
+    private String ageGrouped;
+    private String incomeGrouped;
+    private List<String> roles;
 
     // Getters and Setters
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+    public String getSex() { return sex; }
+    public void setSex(String sex) { this.sex = sex; }
+    public Long getIncome() { return income; }
+    public void setIncome(Long income) { this.income = income; }
+    public String getSegment() { return segment; }
+    public void setSegment(String segment) { this.segment = segment; }
+    public String getAgeGrouped() { return ageGrouped; }
+    public void setAgeGrouped(String ageGrouped) { this.ageGrouped = ageGrouped; }
+    public String getIncomeGrouped() { return incomeGrouped; }
+    public void setIncomeGrouped(String incomeGrouped) { this.incomeGrouped = incomeGrouped; }
+    public List<String> getRoles() { return roles; }
+    public void setRoles(List<String> roles) { this.roles = roles; }
 }

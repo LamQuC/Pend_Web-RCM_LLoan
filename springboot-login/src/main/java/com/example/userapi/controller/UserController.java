@@ -1,64 +1,31 @@
 package com.example.userapi.controller;
 
-import com.example.userapi.dto.LoginRequest;
-import com.example.userapi.dto.RegisterRequest;
 import com.example.userapi.dto.UserDTO;
 import com.example.userapi.service.UserService;
-import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:63342", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "true")
+@RequestMapping("/api/user")
 public class UserController {
-    private final UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        String response = userService.register(registerRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
-        String jwt = userService.login(loginRequest);
-        Map<String, String> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("username", loginRequest.getUsername());
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/user")
-    public ResponseEntity<UserDTO> getUser(@RequestParam String username, Authentication authentication) {
-        if (!authentication.getName().equals(username)) {
-            throw new RuntimeException("You are not authorized to view this user's information");
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        try {
+            UserDTO user = userService.getUserByUsername(username);
+            logger.info("User information retrieved for: {}", username);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            logger.error("Failed to retrieve user {}: {}", username, e.getMessage());
+            return ResponseEntity.status(404).body("User not found: " + e.getMessage());
         }
-        UserDTO userDTO = userService.getUserByUsername(username);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id, Authentication authentication) {
-        UserDTO userDTO = userService.getUserById(id);
-        if (!userService.getUserByUsername(authentication.getName()).getId().equals(id)) {
-            throw new RuntimeException("You are not authorized to view this user's information");
-        }
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @GetMapping("/auth/check")
-    public ResponseEntity<?> checkAuthentication() {
-        return ResponseEntity.ok("You are authenticated!");
     }
 }
