@@ -13,21 +13,31 @@ function DashboardPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Dashboard user:', user); // Debug
+    console.log('User on mount:', user);
     if (!user) {
       console.log('No user, redirecting to login');
       navigate('/login');
       return;
     }
+    console.log('Fetching /api/user for:', user.username);
 
     const fetchUserInfo = async () => {
       try {
         const response = await api.get(`/api/user/${user.username}`);
-        console.log('User info response:', response.data); // Debug
-        setUserInfo(response.data);
+        console.log('User info response:', response.data);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        if (!response.data || Object.keys(response.data).length === 0) {
+          console.warn('API returned empty data');
+        }
+        setUserInfo(response.data || {});
       } catch (error) {
-        console.error('Failed to fetch user info:', error.response || error.message);
-        toast.error('Error loading user info: ' + (error.response?.data || error.message));
+        console.error('Failed to fetch user info:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+        });
+        toast.error('Error loading user info: ' + (error.response?.data?.message || error.message));
         if (error.response?.status === 401) {
           console.log('Unauthorized, redirecting to login');
           navigate('/login');
@@ -39,16 +49,31 @@ function DashboardPage() {
   }, [user, navigate]);
 
   return (
-      <div className="min-h-screen bg-gray-100 flex flex-col">
-        <Header />
-        <div className="container mx-auto p-4 flex-grow">
-          <h1 className="text-3xl font-bold mb-6 text-center">Your Profile</h1>
-          <div className="max-w-lg mx-auto">
-            <UserInfo userInfo={userInfo} />
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header />
+      <div className="flex-grow">
+        {/* Welcome Section */}
+        <section className="bg-blue-600 text-white py-16">
+          <div className="container mx-auto px-6 text-center">
+            <h1 className="text-4xl font-bold mb-4">Welcome, {user?.username || 'User'}!</h1>
+            <p className="text-lg max-w-2xl mx-auto">
+              View and manage your profile information below.
+            </p>
           </div>
-        </div>
-        <Footer />
+        </section>
+
+        {/* User Info Section */}
+        <section className="py-16">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Your Profile</h2>
+            <div className="max-w-4xl mx-auto">
+              <UserInfo userInfo={userInfo} />
+            </div>
+          </div>
+        </section>
       </div>
+      <Footer />
+    </div>
   );
 }
 
