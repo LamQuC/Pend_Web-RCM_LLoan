@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="Black">
     <option name="sdkName" value="Python 3.12" />
   </component>
@@ -12,6 +13,10 @@
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23 (2)" project-jdk-type="JavaSDK">
+=======
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" default="true">
+>>>>>>> fd71c806 (Update code)
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
