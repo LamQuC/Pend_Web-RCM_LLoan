@@ -15,7 +15,7 @@ class UserInput(BaseModel):
     segment: str
 
 # Load model
-model_path = 'src/main/resources/scripts/model.pkl'
+model_path = 'springboot-login\\src\\main\\resources\\scripts\\model.pkl'
 try:
     model_data = joblib.load(model_path)
     gbdt_models = model_data['gbdt_models']
