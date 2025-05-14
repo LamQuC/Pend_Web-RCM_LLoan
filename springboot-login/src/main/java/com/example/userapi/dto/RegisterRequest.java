@@ -10,8 +10,8 @@ public class RegisterRequest {
     private String sex;
     private Long income;
     private String segment;
-    private String ageGrouped;
-    private String incomeGrouped;
+    private String ageGrouped; // Optional, computed server-side
+    private String incomeGrouped; // Optional, computed server-side
     private List<String> roles;
 
     // Getters and Setters

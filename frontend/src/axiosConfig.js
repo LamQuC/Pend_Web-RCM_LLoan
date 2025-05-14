@@ -8,7 +8,8 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const auth = localStorage.getItem('auth');
   if (auth) {
-    config.headers.Authorization = `Basic ${auth}`; // Use Basic Auth
+    console.log('Setting Authorization header:', `Basic ${auth}`); // Debug
+    config.headers.Authorization = `Basic ${auth}`;
   }
   return config;
 });

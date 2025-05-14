@@ -1,6 +1,7 @@
 package com.example.userapi.controller;
 
 import com.example.userapi.dto.UserDTO;
+import com.example.userapi.model.Product;
 import com.example.userapi.service.RecommendationService;
 import com.example.userapi.service.UserService;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class RecommendationController {
     public ResponseEntity<?> getRecommendations(@PathVariable String username) {
         try {
             UserDTO user = userService.getUserByUsername(username);
-            List<String> recommendations = recommendationService.getRecommendations(user);
+            List<Product> recommendations = recommendationService.getRecommendations(username);
             logger.info("Recommendations retrieved for user: {}", username);
             return ResponseEntity.ok(recommendations);
         } catch (Exception e) {

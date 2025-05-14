@@ -97,13 +97,41 @@ public class UserService implements UserDetailsService {
         user.setSex(registerRequest.getSex());
         user.setIncome(registerRequest.getIncome());
         user.setSegment(registerRequest.getSegment());
-        user.setAgeGrouped(registerRequest.getAgeGrouped());
-        user.setIncomeGrouped(registerRequest.getIncomeGrouped());
+        user.setAgeGrouped(computeAgeGroup(registerRequest.getAge()));
+        user.setIncomeGrouped(computeIncomeGroup(registerRequest.getIncome()));
         user.setCreatedAt(LocalDateTime.now());
         user.setRoles(Collections.singletonList("ROLE_USER"));
 
         userRepository.save(user);
         logger.info("User registered successfully: {}", registerRequest.getUsername());
         return "User registered successfully";
+    }
+
+    private String computeAgeGroup(Integer age) {
+        if (age == null) {
+            return "<25";
+        }
+        if (age < 25) {
+            return "<25";
+        } else if (age < 35) {
+            return "25-35";
+        } else if (age < 45) {
+            return "35-45";
+        } else {
+            return "45+";
+        }
+    }
+
+    private String computeIncomeGroup(Long income) {
+        if (income == null) {
+            return "Unknown";
+        }
+        if (income < 50000) {
+            return "<50k";
+        } else if (income < 100000) {
+            return "50k-100k";
+        } else {
+            return "100k+";
+        }
     }
 }
