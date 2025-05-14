@@ -41,8 +41,11 @@ public class SecurityConfig {
         return new ProviderManager(authProvider);
     }
 
-    @Bean
-    public CorsFilter corsFilter(@Value("${app.cors.allowed-origins:http://localhost:63342}") String allowedOrigins) {
+
+
+
+    //ádfasdfsf
+    public CorsFilter corsFilter(@Value("${app.cors.allowed-origins:http://localhost:3000}") String allowedOrigins) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -54,13 +57,13 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
-    @Bean
+
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.setAllowedOrigins(Arrays.asList("http://localhost:63342"));
+                    config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
                     config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     return config;
@@ -70,6 +73,7 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // 👈 Cho phép preflight
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/js/**", "/css/**").permitAll()
                         .requestMatchers("/api/recommend/**").authenticated()

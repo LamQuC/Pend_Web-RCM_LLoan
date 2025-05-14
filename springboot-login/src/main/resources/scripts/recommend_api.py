@@ -58,8 +58,8 @@ def one_hot_encode(user: UserInput, dummy_columns):
     data = {
         'emp_index': 'A',  # Giá trị mặc định
         'sex': 'H' if user.sex == 'M' else 'V' if user.sex == 'F' else user.sex,
-        'new_cust': '0.0',  # Giả sử không phải khách hàng mới
-        'is_primary': '1.0',  # Giả sử là khách hàng chính
+        'new_cust': user.new_cust,  # Giả sử không phải khách hàng mới
+        'is_primary': user.is_primary,  # Giả sử là khách hàng chính
         'segment': user.segment,
         'age_grouped': user.age_grouped,
         'income_grouped': user.income_grouped
