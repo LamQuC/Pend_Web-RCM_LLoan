@@ -28,32 +28,22 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-        try {
-            String result = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            User user = userRepository.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            logger.info("User {} logged in successfully", loginRequest.getUsername());
+        String result = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        User user = userRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        logger.info("User {} logged in successfully", loginRequest.getUsername());
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", result);
-            response.put("username", loginRequest.getUsername());
-            response.put("userId", user.getId());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("Login failed for user {}: {}", loginRequest.getUsername(), e.getMessage());
-            return ResponseEntity.status(401).body("Login failed: " + e.getMessage());
-        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", result);
+        response.put("username", loginRequest.getUsername());
+        response.put("userId", user.getId());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        try {
-            String result = userService.register(registerRequest);
-            logger.info("User {} registered successfully", registerRequest.getUsername());
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            logger.error("Registration failed for user {}: {}", registerRequest.getUsername(), e.getMessage());
-            return ResponseEntity.status(400).body("Registration failed: " + e.getMessage());
-        }
+        String result = userService.register(registerRequest);
+        logger.info("User {} registered successfully", registerRequest.getUsername());
+        return ResponseEntity.ok(result);
     }
 }
