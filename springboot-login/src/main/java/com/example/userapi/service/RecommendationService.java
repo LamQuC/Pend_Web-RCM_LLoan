@@ -1,6 +1,7 @@
 package com.example.userapi.service;
 
 import com.example.userapi.model.Product;
+import com.example.userapi.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService {
@@ -24,62 +23,65 @@ public class RecommendationService {
     @Autowired
     private ProductService productService;
 
-    // Mapping from product_name to product_code based on products table
-    private static final Map<String, String> PRODUCT_NAME_TO_CODE = new HashMap<>();
-    static {
-        PRODUCT_NAME_TO_CODE.put("Savings Account", "ind_ahor_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Guarantees", "ind_aval_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Current Account", "ind_cco_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Derivatives", "ind_cder_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Payroll Account", "ind_cno_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Junior Account", "ind_ctju_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("More Account", "ind_ctma_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Particular Account", "ind_ctop_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Particular Plus Account", "ind_ctpp_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Short-term Deposits", "ind_deco_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Medium-term Deposits", "ind_deme_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Long-term Deposits", "ind_dela_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("E-account", "ind_ecue_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Funds", "ind_fond_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Mortgage", "ind_hip_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Pension Plan", "ind_plan_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Loans", "ind_pres_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Taxes", "ind_reca_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Credit Card", "ind_tjcr_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Securities", "ind_valo_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Home Account", "ind_viv_fin_ult1");
-        PRODUCT_NAME_TO_CODE.put("Payroll", "ind_nomina_ult1");
-        PRODUCT_NAME_TO_CODE.put("Pensions", "ind_nom_pens_ult1");
-        PRODUCT_NAME_TO_CODE.put("Direct Debit", "ind_recibo_ult1");
-    }
+    @Autowired
+    private UserService userService;
 
     public List<Product> getRecommendations(String username) {
         logger.debug("Calling Python API at: {}", PYTHON_API_URL);
         try {
+            // Get actual user data
+            UserDTO user = userService.getUserByUsername(username);
+            logger.info("Getting recommendations for user: {} with age: {}, income: {}, segment: {}", 
+                username, user.getAgeGrouped(), user.getIncomeGrouped(), user.getSegment());
+
             String[] recommendations = restTemplate.postForObject(
                     PYTHON_API_URL,
-                    createUserInput(username),
+                    createUserInput(user),
                     String[].class
             );
-            // Convert product names to product codes
-            List<String> productCodes = Arrays.stream(recommendations)
-                    .map(name -> PRODUCT_NAME_TO_CODE.getOrDefault(name, name))
-                    .collect(Collectors.toList());
+            
+            // Convert product codes to list
+            List<String> productCodes = recommendations != null ? Arrays.asList(recommendations) : new ArrayList<>();
             logger.info("Recommendations for user {}: {}", username, productCodes);
 
-            // Fetch products by productCodes
+            // Fetch products by productCodes using ProductService
             List<Product> recommendedProducts = productService.getProductsByCodes(productCodes);
             logger.info("Found {} products for recommendations", recommendedProducts.size());
+            
+            // If no products found, return some default products
+            if (recommendedProducts.isEmpty()) {
+                logger.warn("No products found for recommendations, returning default products");
+                return getDefaultProducts();
+            }
+            
             return recommendedProducts;
         } catch (Exception e) {
             logger.error("Error fetching recommendations for user {}: {}", username, e.getMessage());
-            throw new RuntimeException("Failed to fetch recommendations", e);
+            return getDefaultProducts();
         }
     }
 
-    private UserInput createUserInput(String username) {
-        // Simplified for brevity; use actual user data
-        return new UserInput("<25", "M", "<50k", "Individuals");
+    private List<Product> getDefaultProducts() {
+        try {
+            return productService.getProductsByCodes(Arrays.asList(
+                "ind_cco_fin_ult1",  // Current Account
+                "ind_recibo_ult1",   // Direct Debit
+                "ind_ctop_fin_ult1"  // Particular Account
+            ));
+        } catch (Exception e) {
+            logger.error("Error fetching default products: {}", e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    private UserInput createUserInput(UserDTO user) {
+        return new UserInput(
+            user.getAgeGrouped(),
+            user.getSex(),
+            user.getIncomeGrouped(),
+            user.getSegment(),
+            user.getCreatedAt() != null ? user.getCreatedAt().toString() : null
+        );
     }
 
     private static class UserInput {
@@ -87,12 +89,14 @@ public class RecommendationService {
         private String sex;
         private String income_grouped;
         private String segment;
+        private String createdAt;
 
-        public UserInput(String age_grouped, String sex, String income_grouped, String segment) {
+        public UserInput(String age_grouped, String sex, String income_grouped, String segment, String createdAt) {
             this.age_grouped = age_grouped;
             this.sex = sex;
             this.income_grouped = income_grouped;
             this.segment = segment;
+            this.createdAt = createdAt;
         }
 
         // Getters and setters
@@ -104,5 +108,7 @@ public class RecommendationService {
         public void setIncome_grouped(String income_grouped) { this.income_grouped = income_grouped; }
         public String getSegment() { return segment; }
         public void setSegment(String segment) { this.segment = segment; }
+        public String getCreatedAt() { return createdAt; }
+        public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     }
 }

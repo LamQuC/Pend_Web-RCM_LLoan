@@ -1,5 +1,6 @@
 package com.example.userapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Product {
     private Double interestRate;
 
     @ManyToMany(mappedBy = "products")
+    @JsonBackReference
     private List<User> users = new ArrayList<>();
 
     // Getters and Setters

@@ -34,10 +34,21 @@ function Homepage() {
           // Fetch recommendations
           const recResponse = await api.get(`/api/recommend/${user.username}`);
           console.log('Recommendations:', recResponse.data); // Debug
-          setRecommendations(recResponse.data.slice(0, 4)); // Get top 4 recommendations
-
+          
+          // Ensure recommendations is an array before using it
+          let recommendationData = [];
+          if (recResponse.data && Array.isArray(recResponse.data)) {
+            recommendationData = recResponse.data.slice(0, 4); // Get top 4 recommendations
+          } else if (recResponse.data) {
+            console.warn('Response is not an array:', recResponse.data);
+            // Try to convert if it's a single object
+            recommendationData = [recResponse.data].filter(item => item && typeof item === 'object');
+          }
+          
+          setRecommendations(recommendationData);
+          
           // Open modal if recommendations are available
-          if (recResponse.data.length > 0) {
+          if (recommendationData.length > 0) {
             setIsModalOpen(true);
           } else {
             console.log('No recommendations found'); // Debug
@@ -47,6 +58,7 @@ function Homepage() {
       } catch (error) {
         console.error('Error fetching recommendations:', error.response || error.message);
         toast.error('Error loading recommendations: ' + (error.response?.data || error.message));
+        setRecommendations([]); // Ensure recommendations is an empty array on error
       }
     };
 

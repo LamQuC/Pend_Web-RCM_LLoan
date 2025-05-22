@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,15 +26,15 @@ public class RecommendationController {
     private UserService userService;
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getRecommendations(@PathVariable String username) {
+    public ResponseEntity<List<Product>> getRecommendations(@PathVariable String username) {
         try {
             UserDTO user = userService.getUserByUsername(username);
             List<Product> recommendations = recommendationService.getRecommendations(username);
-            logger.info("Recommendations retrieved for user: {}", username);
+            logger.info("Recommendations retrieved for user: {} - count: {}", username, recommendations.size());
             return ResponseEntity.ok(recommendations);
         } catch (Exception e) {
             logger.error("Failed to retrieve recommendations for user {}: {}", username, e.getMessage());
-            return ResponseEntity.status(500).body("Recommendation failed: " + e.getMessage());
+            return ResponseEntity.ok(new ArrayList<>()); // Return empty list instead of error
         }
     }
 }
