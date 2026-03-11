@@ -1,110 +1,94 @@
-Pend_Web-RCM_LLoan
-📌 Project Overview
+# Pend_Web-RCM_LLoan
 
-Pend_Web-RCM_LLoan is a web-based application designed to support the loan request and management workflow.
+## 📌 Overview
 
-The system allows users to submit loan requests, track loan status, and manage loan records through a web interface.
-It demonstrates the implementation of a typical multi-layer web application architecture including presentation, business logic, and data persistence.
+**Pend_Web-RCM_LLoan** is a web-based system designed to support the **loan request and management workflow**.
 
-This project was developed for learning and practicing web backend development and database integration.
+The application allows users to submit loan requests, track loan processing status, and manage loan records through a web interface.  
+This project demonstrates the implementation of a **multi-layer web architecture**, including frontend, backend, and database integration.
 
-✨ Key Features
+---
 
-📄 Submit and manage loan requests
+## ✨ Features
 
-🔍 Track loan processing status
+- Submit and manage loan requests
+- Track loan approval status
+- User authentication and management
+- Store and manage loan data
+- Web interface for interacting with the system
 
-👤 User authentication and management
+---
 
-🗄️ Store and retrieve loan data from database
+## 🏗 System Architecture
 
-🌐 Web interface for interacting with the system
-
-⚙️ Backend processing for loan operations
-
-🏗️ System Architecture
-
-The system follows a 3-tier architecture:
-
+The system follows a typical **3-tier architecture**:
 Client (Browser)
-        │
-        ▼
+│
+▼
 Application Server (Backend)
-        │
-        ▼
-Database
-Components
-
-Frontend
-
-User interface
-
-Forms for loan submission
-
-Display loan information
-
-Backend
-
-Business logic
-
-Request processing
-
-Communication with database
-
+│
+▼
 Database
 
-Stores loan records
+---
 
-Stores user information
+## 🛠 Tech Stack
 
-Maintains application data
+| Layer | Technology |
+|------|------------|
+| Backend | Java / Spring Boot |
+| Frontend | HTML, CSS, JavaScript |
+| Database | MySQL |
+| Build Tool | Maven |
+| Version Control | Git, GitHub |
 
-🛠️ Tech Stack
-Layer	Technology
-Backend	Java / Spring Boot
-Frontend	HTML, CSS, JavaScript
-Database	MySQL
-Build Tool	Maven
-Version Control	Git, GitHub
-📂 Project Structure
+---
+
+## 📂 Project Structure
 Pend_Web-RCM_LLoan
 │
-├── src/
-│   ├── controller/      # Handle HTTP requests
-│   ├── service/         # Business logic
-│   ├── repository/      # Database access layer
-│   └── model/           # Data models
+├── src
+│ ├── controller
+│ ├── service
+│ ├── repository
+│ └── model
 │
-├── resources/           # Configuration files
+├── resources
 │
-├── web/
-│   ├── css/
-│   ├── js/
-│   └── templates/
+├── web
+│ ├── css
+│ ├── js
+│ └── templates
 │
-├── database/            # SQL scripts
+├── database
 │
 └── README.md
-⚙️ Installation & Setup
-1️⃣ Clone the repository
-git clone https://github.com/LamQuC/Pend_Web-RCM_LLoan.git
-2️⃣ Navigate to the project folder
-cd Pend_Web-RCM_LLoan
-3️⃣ Configure database
 
-Create a database and update configuration:
+---
+
+## ⚙️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/LamQuC/Pend_Web-RCM_LLoan.git
+2. Navigate to project directory
+cd Pend_Web-RCM_LLoan
+3. Configure database
+
+Create a database and update configuration settings:
 
 DB_NAME=loan_db
 DB_USER=root
 DB_PASSWORD=your_password
-4️⃣ Run the application
+4. Run the application
 
 Using Maven:
 
 mvn spring-boot:run
 🚀 Usage
 
-After starting the server, open:
+Start the server and open your browser:
 
 http://localhost:8080
 
@@ -116,7 +100,7 @@ View loan records
 
 Track loan status
 
-Manage loan data
+Manage loan information
 
 📈 Future Improvements
 
@@ -124,8 +108,8 @@ Improve UI/UX design
 
 Implement role-based access control
 
-Add reporting dashboard
+Add analytics and reporting
 
 Improve system security
 
-Provide REST API integration
+Add REST API integration
