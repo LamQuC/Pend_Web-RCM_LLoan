@@ -31,30 +31,9 @@ This repository includes:
 - Supporting utility code
 - Configuration and dependency files
 
-The trained model file (`.pkl`) is **not stored in the repository** because:
-
-- Serialized models can be large
-- Binary artifacts are not ideal for version control
-- The model can be reproduced by running the training script
+The trained model file (`.pkl`) is **not stored in the repository
 
 ---
-
-## Project Structure
-Pend_Web-RCM_LLoan
-│
-├── data/ # Raw or processed datasets (if included)
-│
-├── notebooks/ # Jupyter notebooks used for exploration or training
-│
-├── src/ # Source code for data processing and model training
-│
-├── models/ # Directory intended to store trained model files
-│ # (pickle files are not committed to the repository)
-│
-├── requirements.txt # Project dependencies
-│
-└── README.md
-
 
 > Note: The exact structure may vary depending on the version of the project.
 
@@ -78,51 +57,56 @@ import pickle
 
 with open("model.pkl", "wb") as f:
     pickle.dump(model, f)
-
+```
 The resulting file (model.pkl) is used later for inference.
 
-Why the Model File Is Not Included
 
-The trained model file is intentionally excluded from the repository.
+---
 
-Common reasons include:
+## ⚙️ Installation
 
-Large file size
+### 1. Clone the repository
 
-Binary files do not work well with version control
-
-The model can be regenerated from the training scripts
-
-If needed, the model can be recreated by running the training pipeline.
-
-Environment Setup
-Clone the repository
-git clone <repository-url>
+```bash
+git clone https://github.com/LamQuC/Pend_Web-RCM_LLoan.git
+2. Navigate to project directory
 cd Pend_Web-RCM_LLoan
-Install dependencies
-pip install -r requirements.txt
-Reproducing the Model
+3. Configure database
 
-To rebuild the trained model:
+Create a database and update configuration settings:
 
-Prepare the dataset
+DB_NAME=loan_db
+DB_USER=root
+DB_PASSWORD=your_password
+4. Run the application
 
-Run the training script
+Using Maven:
 
-Example:
+mvn spring-boot:run
+🚀 Usage
 
-python train_model.py
+Start the server and open your browser:
 
-After training completes, the serialized model file will be generated locally.
+http://localhost:8080
 
-Future Improvements
+Users can:
 
-Potential future improvements for this project include:
+Submit loan requests
 
-Improving feature engineering
+View loan records
 
-Experimenting with additional models
+Track loan status
 
-Adding model evaluation metrics
+Manage loan information
 
-Creating a deployment pipeline for inference
+📈 Future Improvements
+
+Improve UI/UX design
+
+Implement role-based access control
+
+Add analytics and reporting
+
+Improve system security
+
+Add REST API integration
