@@ -1,115 +1,128 @@
 # Pend_Web-RCM_LLoan
 
-## 📌 Overview
+## Overview
 
-**Pend_Web-RCM_LLoan** is a web-based system designed to support the **loan request and management workflow**.
+This repository contains the source code for a machine learning project related to **loan data processing and prediction**.
 
-The application allows users to submit loan requests, track loan processing status, and manage loan records through a web interface.  
-This project demonstrates the implementation of a **multi-layer web architecture**, including frontend, backend, and database integration.
+The project focuses on building a pipeline that prepares data, trains a machine learning model, and generates a serialized model file (`.pkl`) for later inference.  
+Due to repository size constraints and version control best practices, the trained model files are **not included in this repository**.
 
----
-
-## ✨ Features
-
-- Submit and manage loan requests
-- Track loan approval status
-- User authentication and management
-- Store and manage loan data
-- Web interface for interacting with the system
+The repository mainly contains the **data processing scripts, model training code, and supporting utilities** needed to reproduce the workflow.
 
 ---
 
-## 🏗 System Architecture
+## Project Objectives
 
-The system follows a typical **3-tier architecture**:
-Client (Browser)
-│
-▼
-Application Server (Backend)
-│
-▼
-Database
+The main goals of this project are:
+
+- Process and prepare loan-related data
+- Train a machine learning model based on the processed dataset
+- Serialize the trained model for later use
+- Provide scripts that allow the model to be rebuilt if needed
 
 ---
 
-## 🛠 Tech Stack
+## Repository Contents
 
-| Layer | Technology |
-|------|------------|
-| Backend | Java / Spring Boot |
-| Frontend | HTML, CSS, JavaScript |
-| Database | MySQL |
-| Build Tool | Maven |
-| Version Control | Git, GitHub |
+This repository includes:
+
+- Data preprocessing scripts
+- Model training scripts
+- Supporting utility code
+- Configuration and dependency files
+
+The trained model file (`.pkl`) is **not stored in the repository** because:
+
+- Serialized models can be large
+- Binary artifacts are not ideal for version control
+- The model can be reproduced by running the training script
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 Pend_Web-RCM_LLoan
 │
-├── src
-│ ├── controller
-│ ├── service
-│ ├── repository
-│ └── model
+├── data/ # Raw or processed datasets (if included)
 │
-├── resources
+├── notebooks/ # Jupyter notebooks used for exploration or training
 │
-├── web
-│ ├── css
-│ ├── js
-│ └── templates
+├── src/ # Source code for data processing and model training
 │
-├── database
+├── models/ # Directory intended to store trained model files
+│ # (pickle files are not committed to the repository)
+│
+├── requirements.txt # Project dependencies
 │
 └── README.md
 
+
+> Note: The exact structure may vary depending on the version of the project.
+
 ---
 
-## ⚙️ Installation
+## Model Training
 
-### 1. Clone the repository
+The model used in this project is trained using the scripts provided in the repository.
 
-```bash
-git clone https://github.com/LamQuC/Pend_Web-RCM_LLoan.git
-2. Navigate to project directory
+Typical workflow:
+
+1. Prepare and clean the dataset
+2. Perform feature engineering
+3. Train the machine learning model
+4. Serialize the trained model using `pickle`
+
+Example serialization:
+
+```python
+import pickle
+
+with open("model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+The resulting file (model.pkl) is used later for inference.
+
+Why the Model File Is Not Included
+
+The trained model file is intentionally excluded from the repository.
+
+Common reasons include:
+
+Large file size
+
+Binary files do not work well with version control
+
+The model can be regenerated from the training scripts
+
+If needed, the model can be recreated by running the training pipeline.
+
+Environment Setup
+Clone the repository
+git clone <repository-url>
 cd Pend_Web-RCM_LLoan
-3. Configure database
+Install dependencies
+pip install -r requirements.txt
+Reproducing the Model
 
-Create a database and update configuration settings:
+To rebuild the trained model:
 
-DB_NAME=loan_db
-DB_USER=root
-DB_PASSWORD=your_password
-4. Run the application
+Prepare the dataset
 
-Using Maven:
+Run the training script
 
-mvn spring-boot:run
-🚀 Usage
+Example:
 
-Start the server and open your browser:
+python train_model.py
 
-http://localhost:8080
+After training completes, the serialized model file will be generated locally.
 
-Users can:
+Future Improvements
 
-Submit loan requests
+Potential future improvements for this project include:
 
-View loan records
+Improving feature engineering
 
-Track loan status
+Experimenting with additional models
 
-Manage loan information
+Adding model evaluation metrics
 
-📈 Future Improvements
-
-Improve UI/UX design
-
-Implement role-based access control
-
-Add analytics and reporting
-
-Improve system security
-
-Add REST API integration
+Creating a deployment pipeline for inference
